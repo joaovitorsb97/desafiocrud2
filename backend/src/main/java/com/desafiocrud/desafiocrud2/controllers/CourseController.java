@@ -8,10 +8,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(value = "/courses")
@@ -28,5 +25,27 @@ public class CourseController {
 
         PageRequest pageRequest = PageRequest.of(page, linesPerPage, Sort.Direction.valueOf(direction), orderBy);
         return ResponseEntity.status(HttpStatus.OK).body(courseService.findAllPaged(pageRequest));
+    }
+
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<CourseDTO> findById(@PathVariable Long id){
+        return ResponseEntity.status(HttpStatus.OK).body(courseService.findById(id));
+    }
+
+    @PostMapping
+    public ResponseEntity<CourseDTO> insert(@RequestBody CourseDTO courseDTO){
+        return ResponseEntity.status(HttpStatus.CREATED).body(courseService.insert(courseDTO));
+    }
+
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<CourseDTO> update(@PathVariable Long id, @RequestBody CourseDTO courseDTO){
+        return ResponseEntity.status(HttpStatus.OK).body(courseService.update(id, courseDTO));
+    }
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<CourseDTO> delete(@PathVariable Long id){
+        courseService.deleteById(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+
     }
 }
